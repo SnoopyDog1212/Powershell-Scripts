@@ -16,7 +16,6 @@ Write-Host "exitcode: $($Process.exitcode)"
 
 # I want it be dynamically showing the logs from C:\ProgramData\CRANIMAX\CRANEbee\Logs\CB.beeAdmin20220513 (yearmonthday)
 # This log will show you what the second installer is actually doing
-# Darren said the Start-ProcessWithLogTail function should work and that Advanced IP Scanner is a good script to look at 
 
 $ExitTime = (get-date).addseconds(1800)
 
