@@ -14,8 +14,22 @@ foreach($owner in $calendarOwners){
     $task = $owner + ":\Tasks"
 
     foreach($recievingUser in $giveAccessTo){
-        Add-MailboxFolderPermission -Identity $calendar -User $recievingUser -AccessRights PublishingEditor
-        Add-MailboxFolderPermission -Identity $task -User $recievingUser -AccessRights PublishingEditor
+        ##This doesn't work probably cause the error is just wrote out instead of crashing
+        ##Add-MailboxFolderPermission: |Microsoft.Exchange.Management.StoreTasks.UserAlreadyExistsInPermissionEntryException|An existing permission entry was found for user: user.
+        try {
+            Add-MailboxFolderPermission -Identity $calendar -User $recievingUser -AccessRights PublishingEditor
+        }
+        catch [Microsoft.Exchange.Management.StoreTasks.UserAlreadyExistsInPermissionEntryException]{
+            Write-Host "Calendar permission already found, setting access to Publishing Editor"
+            Set-MailboxFolderPermission -Identity $calendar -User $recievingUser -AccessRights PublishingEditor
+        }
+        try {
+            Add-MailboxFolderPermission -Identity $task -User $recievingUser -AccessRights PublishingEditor
+            }
+        catch [Microsoft.Exchange.Management.StoreTasks.UserAlreadyExistsInPermissionEntryException]{
+            Write-Host "Task permission already found, setting access to Publishing Editor"
+            Set-MailboxFolderPermission -Identity $task -User $recievingUser -AccessRights PublishingEditor
+            }
     }
 
     Write-Host "All modifications for $owner have been completed"
